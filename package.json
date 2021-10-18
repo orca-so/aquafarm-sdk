@@ -11,6 +11,7 @@
     "start": "yarn run build:live",
     "start:prod": "ts-node src/index.ts",
     "ts-node": "./node_modules/ts-node/dist/bin-script.js",
+    "prepublishOnly": "tsc -p .",
     "build": "tsc -p .",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts",
     "lint": "yarn run eslint src/ --ext .js,.jsx,.ts,.tsx",

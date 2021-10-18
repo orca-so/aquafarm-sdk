@@ -17,7 +17,7 @@ export async function fetchBatchedAccountInfos(
     args: connection._buildArgs(
       [pubkey.toBase58()],
       "singleGossip",
-      "jsonParsed"
+      "base64"
     ),
   }));
 
