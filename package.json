@@ -19,8 +19,8 @@
   "author": "",
   "description": "",
   "dependencies": {
-    "@solana/spl-token": "^0.1.6",
-    "@solana/web3.js": "^1.20.0",
+    "@solana/spl-token": "^0.1.8",
+    "@solana/web3.js": "^1.31.0",
     "@types/bn.js": "^5.1.0",
     "bn.js": "^5.2.0",
     "buffer-layout": "^1.2.1",
