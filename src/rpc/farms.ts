@@ -1,5 +1,4 @@
-import { AccountInfo, PublicKey } from "@solana/web3.js";
-import { ConnectionInternal } from "../utils/types";
+import { AccountInfo, Connection, PublicKey } from "@solana/web3.js";
 import GlobalFarm, { getAuthorityAndNonce } from "../models/GlobalFarm";
 import { decodeGlobalFarmBuffer, decodeUserFarmBuffer } from "../utils/layout";
 import UserFarm from "../models/UserFarm";
@@ -7,36 +6,10 @@ import { getUserFarmAddress } from "../models/UserFarm";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export async function fetchBatchedAccountInfos(
-  connection: ConnectionInternal,
+  connection: Connection,
   pubkeys: PublicKey[]
-): Promise<AccountInfo<Buffer>[] | null> {
-  const requests = pubkeys.map((pubkey) => ({
-    methodName: "getAccountInfo",
-
-    // Passing "jsonParsed" as the encoding allows the address to be treated as a base58 string
-    args: connection._buildArgs(
-      [pubkey.toBase58()],
-      "singleGossip",
-      "jsonParsed"
-    ),
-  }));
-
-  const results: any = await connection._rpcBatchRequest(requests);
-
-  return (
-    results
-      // Convert from RPC request response to AccountInfo<Buffer>
-      .map((res: any) =>
-        res.result.value
-          ? Object.assign({}, res.result.value, {
-              // This Buffer conversion is based on
-              // https://github.com/solana-labs/solana-web3.js/blob/master/src/connection.ts#L57
-              // Below, data[0] is the actual data, data[1] is the format (base64)
-              data: Buffer.from(res.result.value.data[0], "base64"),
-            })
-          : null
-      )
-  );
+): Promise<(AccountInfo<Buffer> | null)[]> {
+  return connection.getMultipleAccountsInfo(pubkeys, "singleGossip");
 }
 
 /**
@@ -46,7 +19,7 @@ export async function fetchBatchedAccountInfos(
  * @returns An array of GlobalFarm models
  */
 export async function fetchGlobalFarms(
-  connection: ConnectionInternal,
+  connection: Connection,
   farmPubkeys: PublicKey[],
   programId: PublicKey
 ): Promise<GlobalFarm[]> {
@@ -80,7 +53,7 @@ export async function fetchGlobalFarms(
  * @returns An array of GlobalFarm models
  */
 export async function fetchUserFarms(
-  connection: ConnectionInternal,
+  connection: Connection,
   userPubkey: PublicKey,
   farmPubkeys: PublicKey[],
   programId: PublicKey
