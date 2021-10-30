@@ -39,6 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",
     "lint": "yarn run eslint src/ --ext .js,.ts",
+    "nodemon": "^2.0.14",
     "ts-node": "^9.1.1"
   }
 }
